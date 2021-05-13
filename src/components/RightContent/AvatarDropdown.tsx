@@ -6,6 +6,7 @@ import { stringify } from 'querystring';
 import HeaderDropdown from '../HeaderDropdown';
 import styles from './index.less';
 import { outLogin } from '@/services/ant-design-pro/api';
+import { useIntl } from 'umi';
 
 export type GlobalHeaderRightProps = {
   menu?: boolean;
@@ -31,6 +32,11 @@ const loginOut = async () => {
 
 const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
   const { initialState, setInitialState } = useModel('@@initialState');
+  const intl = useIntl();
+
+  const logoutText = intl.formatMessage({
+    id: 'app.auth.logout',
+  });
 
   const onMenuClick = useCallback(
     (event: {
@@ -90,7 +96,7 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
 
       <Menu.Item key="logout">
         <LogoutOutlined />
-        退出登录
+        {logoutText}
       </Menu.Item>
     </Menu>
   );
