@@ -17,10 +17,10 @@ yarn-error.log
 
 /coverage
 .idea
-yarn.lock
-package-lock.json
+# yarn.lock
+# package-lock.json
 *bak
-.vscode
+# .vscode
 
 # visual studio code
 .history

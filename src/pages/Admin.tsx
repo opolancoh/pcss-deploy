@@ -10,14 +10,12 @@ export default (): React.ReactNode => {
     <PageHeaderWrapper
       content={intl.formatMessage({
         id: 'pages.admin.subPage.title',
-        defaultMessage: ' 这个页面只有 admin 权限才能查看',
       })}
     >
       <Card>
         <Alert
           message={intl.formatMessage({
-            id: 'pages.welcome.alertMessage',
-            defaultMessage: '更快更强的重型组件，已经发布。',
+            id: 'pages.home.alertMessage',
           })}
           type="success"
           showIcon
