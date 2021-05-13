@@ -7,13 +7,7 @@ This project is initialized with [Ant Design Pro](https://pro.ant.design). Follo
 Install `node_modules`:
 
 ```bash
-npm install
-```
-
-or
-
-```bash
-yarn
+npm install --legacy-peer-deps
 ```
 
 ## Provided Scripts
