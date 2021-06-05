@@ -34,6 +34,26 @@ declare namespace API {
     pageSize?: number;
   };
 
+  type InstructorListItem = {
+    key?: number;
+    clavePersona?: number;
+    nombrePersona: string;
+    tipoVinculacion: string;
+    totalHorasMes: number;
+    fechaInicioContrato?: string;
+    fechaFinContrato?: string;
+    coordinador?: string;
+    areaDeConocimiento: string;
+    resultadoDeAprendizaje?: string;
+  };
+
+  type InstructorList = {
+    data?: InstructorListItem[];
+    /** 列表的内容总数 */
+    total?: number;
+    success?: boolean;
+  };
+
   type RuleListItem = {
     key?: number;
     disabled?: boolean;

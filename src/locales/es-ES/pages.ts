@@ -63,4 +63,12 @@ export default {
   'pages.searchTable.tenThousand': '0000',
   'pages.searchTable.batchDeletion': 'bacth deletion',
   'pages.searchTable.batchApproval': 'batch approval',
+  'pages.instructor.table.title': 'Listado de instructores',
+  'pages.instructor.tipoVinculacion': 'Tipo de vinculación',
+  'pages.instructor.totalHorasMes': 'Total horas mes',
+  'pages.instructor.fechaInicioContrato': 'Fecha inicio contrato',
+  'pages.instructor.fechaFinContrato': 'Fecha fin contrato',
+  'pages.instructor.coordinador': 'Coordinador',
+  'pages.instructor.areaDeConocimiento': 'Área de conocimiento',
+  'pages.instructor.resultadoDeAprendizaje': 'Resultado de aprendizaje',
 };
