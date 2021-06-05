@@ -32,7 +32,21 @@
         path: '/admin/sub-page',
         name: 'sub-page',
         icon: 'smile',
-        component: './Home',
+        component: './Instructor',
+      },
+    ],
+  },
+  {
+    path: '/master-data',
+    name: 'master-data',
+    icon: 'crown',
+    component:'../layouts/BasicLayout',
+    routes: [
+      {
+        name: 'instructor',
+        path: '/master-data/instructors',
+        icon: 'table',
+        component: './Instructor',
       },
     ],
   },
