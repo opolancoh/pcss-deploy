@@ -79,7 +79,7 @@ export const request: RequestConfig = {
     if (response && response.status) {
       const { status, statusText, url } = response;
       const requestErrorMessage = messages['app.request.error'];
-      const errorMessage = `${requestErrorMessage} ${status}: ${url}`;
+      const errorMessage = `[${status}] ${requestErrorMessage}:`;
       const errorDescription = messages[`app.request.${status}`] || statusText;
       notification.error({
         message: errorMessage,

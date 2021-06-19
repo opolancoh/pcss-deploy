@@ -34,26 +34,6 @@ declare namespace API {
     pageSize?: number;
   };
 
-  type InstructorListItem = {
-    key?: number;
-    clavePersona?: number;
-    nombrePersona: string;
-    tipoVinculacion: string;
-    totalHorasMes: number;
-    fechaInicioContrato?: string;
-    fechaFinContrato?: string;
-    coordinador?: string;
-    areaDeConocimiento: string;
-    resultadoDeAprendizaje?: string;
-  };
-
-  type InstructorList = {
-    data?: InstructorListItem[];
-    /** 列表的内容总数 */
-    total?: number;
-    success?: boolean;
-  };
-
   type RuleListItem = {
     key?: number;
     disabled?: boolean;
@@ -118,4 +98,41 @@ declare namespace API {
     description?: string;
     type?: NoticeIconItemType;
   };
+
+  export type Instructor = {
+    personaId: number;
+    tipoIdentificacion: string;
+    numeroIdentificacion: string;
+    nombres: string;
+    apellidos: string;
+    tipoVinculacion: string;
+    totalHorasMes: number;
+    fechaInicioContrato?: string;
+    fechaFinContrato?: string;
+    coordinador?: string;
+    competencia: string;
+    resultadoDeAprendizaje?: string;
+    areaDeConocimiento: string;
+  };
+
+  export type InstructorList = {
+    data: Instructor[];
+    /** 列表的内容总数 */
+    total?: number;
+    success?: boolean;
+  };
+
+  export type GetAllResponse = {
+    data: any[];
+    paging: {
+      total: number;
+    };
+  };
+
+  export type TipoVinculacion = {
+    tipoVinculacionId: number;
+    descripcion: string;
+  };
+
+  export type TipoVinculacionList = TipoVinculacion[];
 }
