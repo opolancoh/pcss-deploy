@@ -112,6 +112,7 @@ function getItems(req: Request, res: Response, u: string) {
 }
 
 function postItem(req: Request, res: Response, u: string, b: Request) {
+  console.log('postItem')
   let realUrl = u;
   if (!realUrl || Object.prototype.toString.call(realUrl) !== '[object String]') {
     realUrl = req.url;
@@ -128,9 +129,11 @@ function postItem(req: Request, res: Response, u: string, b: Request) {
     case 'post':
       (() => {
         const i = Math.ceil(Math.random() * 10000);
-        const newRule: API.InstructorListItem = generateItem(i);
-        tableListDataSource.unshift(newRule);
-        return res.json(newRule);
+        const newItem: API.InstructorListItem = generateItem(i);
+        tableListDataSource.unshift(newItem);
+        console.log('tableListDataSource', tableListDataSource);
+        console.log('newItem', newItem);
+        return res.json(newItem);
       })();
       return;
 

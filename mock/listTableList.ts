@@ -105,6 +105,7 @@ function getRule(req: Request, res: Response, u: string) {
 }
 
 function postRule(req: Request, res: Response, u: string, b: Request) {
+  console.log('postItem')
   let realUrl = u;
   if (!realUrl || Object.prototype.toString.call(realUrl) !== '[object String]') {
     realUrl = req.url;

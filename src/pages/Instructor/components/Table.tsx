@@ -1,42 +1,28 @@
 import React, { useState, useRef } from 'react';
-import { PlusOutlined } from '@ant-design/icons';
-import { Button, message, Drawer, ConfigProvider } from 'antd';
+import { PlusOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
+import { Modal, message, Button, ConfigProvider } from 'antd';
 import { useIntl, FormattedMessage } from 'umi';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
-import { ModalForm, ProFormText, ProFormTextArea } from '@ant-design/pro-form';
-import type { ProDescriptionsItemProps } from '@ant-design/pro-descriptions';
-import ProDescriptions from '@ant-design/pro-descriptions';
-import type { FormValueType } from './UpdateForm';
-import UpdateForm from './UpdateForm';
-import { getItems, addItem, updateItem, removeItem } from '@/services/api/instructor-api';
-import type { Instructor as Item, PageParams } from '@/services/api/api-typings';
 
-/**
- * 添加节点
- *
- * @param fields
- */
-const handleAdd = async (fields: Item) => {
-  const hide = message.loading('正在添加');
-  try {
-    await addItem({ ...fields });
-    hide();
-    message.success('添加成功');
-    return true;
-  } catch (error) {
-    hide();
-    message.error('添加失败请重试！');
-    return false;
-  }
-};
+// import { ModalForm, ProFormText, ProFormTextArea } from '@ant-design/pro-form';
+// import type { ProDescriptionsItemProps } from '@ant-design/pro-descriptions';
+// import ProDescriptions from '@ant-design/pro-descriptions';
+
+import { getAll, removeOne } from '@/services/api/instructor-api';
+import CreateForm from './CreateForm';
+// import type { FormValueType } from './UpdateForm';
+// import UpdateForm from './UpdateForm';
+import { thousandsSeparatorWithDots } from '@/utils/utils';
+
+const { confirm } = Modal;
 
 /**
  * 更新节点
  *
  * @param fields
  */
-const handleUpdate = async (fields: FormValueType) => {
+/* const handleUpdate = async (fields: FormValueType) => {
   const hide = message.loading('正在配置');
   try {
     await updateItem({
@@ -53,45 +39,46 @@ const handleUpdate = async (fields: FormValueType) => {
     message.error('配置失败请重试！');
     return false;
   }
-};
+}; */
 
-/**
- * 删除节点
- *
- * @param selectedRows
- */
-const handleRemove = async (selectedRows: Item[]) => {
-  const hide = message.loading('正在删除');
-  if (!selectedRows) return true;
-  try {
-    await removeItem({
-      key: selectedRows.map((row) => row.key),
-    });
-    hide();
-    message.success('删除成功，即将刷新');
-    return true;
-  } catch (error) {
-    hide();
-    message.error('删除失败，请重试');
-    return false;
-  }
-};
+function showRemoveConfirm({ title, content, handleOnOk }) {
+  confirm({
+    title,
+    icon: <ExclamationCircleOutlined />,
+    content,
+    cancelText: 'No',
+
+    onOk() {
+      handleOnOk();
+    },
+  });
+}
 
 const TableList: React.FC = () => {
   /** Pop-up window update */
-  const [showDetail, setShowDetail] = useState<boolean>(false);
+  // const [showDetail, setShowDetail] = useState<boolean>(false);
   /** Pop-up window create */
-  const [createModalVisible, handleModalVisible] = useState<boolean>(false);
+  const [createFormVisible, setCreateFormVisible] = useState<boolean>(false);
+  const [removeModalVisible, setRemoveModalVisible] = useState<boolean>(false);
   /** Pop-up window update */
-  const [updateModalVisible, handleUpdateModalVisible] = useState<boolean>(false);
+  // const [updateModalVisible, handleUpdateModalVisible] = useState<boolean>(false);
 
-  const [currentRow, setCurrentRow] = useState<Item>();
+  const [currentRow, setCurrentRow] = useState<API.Instructor>();
 
   const actionRef = useRef<ActionType>();
 
   const intl = useIntl();
 
-  const columns: ProColumns<Item>[] = [
+  const columns: ProColumns<API.Instructor>[] = [
+    {
+      dataIndex: 'tipoIdentificacion',
+      title: <FormattedMessage id="app.person.idType" />,
+    },
+    {
+      dataIndex: 'numeroIdentificacion',
+      title: <FormattedMessage id="app.person.idNumber" />,
+      renderText: (val: string) => thousandsSeparatorWithDots(val),
+    },
     {
       dataIndex: 'nombrePersona',
       title: <FormattedMessage id="app.person.name" />,
@@ -99,12 +86,11 @@ const TableList: React.FC = () => {
         return (
           <a
             onClick={() => {
-              console.log(entity);
               setCurrentRow(entity);
-              setShowDetail(true);
+              // setShowDetail(true);
             }}
           >
-            {dom}
+            {`${entity.nombres} ${entity.apellidos}`}
           </a>
         );
       },
@@ -155,7 +141,40 @@ const TableList: React.FC = () => {
         <a
           key="remove"
           onClick={() => {
-            console.log('app.item.remove', record);
+            console.log('ecord:', record);
+            showRemoveConfirm({
+              title: intl.formatMessage({
+                id: 'app.item.removeMessage',
+              }),
+              content: `${record.nombres} ${record.apellidos}`,
+              handleOnOk: async () => {
+                const hide = message.loading(
+                  intl.formatMessage({
+                    id: 'app.processing.loading',
+                  }),
+                );
+                try {
+                  await removeOne(record.personaId);
+                  hide();
+                  message.success(
+                    intl.formatMessage({
+                      id: 'app.processing.success',
+                    }),
+                  );
+                  if (actionRef.current) {
+                    actionRef.current.reload();
+                    console.log('Table reloaded!', actionRef.current);
+                  }
+                } catch (error) {
+                  hide();
+                  message.error(
+                    intl.formatMessage({
+                      id: 'app.processing.error',
+                    }),
+                  );
+                }
+              },
+            });
           }}
         >
           <FormattedMessage id="app.item.remove" />
@@ -166,31 +185,49 @@ const TableList: React.FC = () => {
 
   return (
     <ConfigProvider locale={intl}>
-      <ProTable<Item, PageParams>
+      <ProTable<API.Instructor, API.PageParams>
         headerTitle={intl.formatMessage({
           id: 'pages.instructor.table.title',
         })}
-        rowKey="claveInstructor"
+        rowKey="personaId"
         search={false}
         options={false}
         columns={columns}
         pagination={{
-          showTotal: undefined,
           showSizeChanger: false,
         }}
         actionRef={actionRef}
-        request={getItems}
+        request={getAll}
         toolBarRender={() => [
           <Button
             type="primary"
             key="primary"
             onClick={() => {
-              handleModalVisible(true);
+              setCreateFormVisible(true);
             }}
           >
             <PlusOutlined /> <FormattedMessage id="app.item.add" />
           </Button>,
         ]}
+      />
+      <CreateForm
+        onSubmit={async (success) => {
+          console.log('Table onSubmit', success);
+          if (success) {
+            setCreateFormVisible(false);
+            setCurrentRow(undefined);
+            if (actionRef.current) {
+              actionRef.current.reload();
+              console.log('Table reloaded!', actionRef.current);
+            }
+          }
+        }}
+        onCancel={() => {
+          setCreateFormVisible(false);
+          setCurrentRow(undefined);
+        }}
+        formVisible={createFormVisible}
+        values={currentRow || {}}
       />
     </ConfigProvider>
   );

@@ -21,7 +21,7 @@
     icon: 'home',
     component: './Home',
   },
-  {
+/*   {
     path: '/admin',
     name: 'admin',
     icon: 'crown',
@@ -35,7 +35,7 @@
         component: './Instructor',
       },
     ],
-  },
+  }, */
   {
     path: '/master-data',
     name: 'master-data',
@@ -50,12 +50,12 @@
       },
     ],
   },
-  {
+/*   {
     name: 'list.table-list',
     icon: 'table',
     path: '/list',
     component: './TableList',
-  },
+  }, */
   {
     path: '/',
     redirect: '/home',
