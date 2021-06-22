@@ -109,15 +109,16 @@ const CreateForm: React.FC<FormProps> = (props) => {
           width="md"
           name="tipoVinculacion"
           label={<FormattedMessage id="pages.instructor.tipoVinculacion" />}
+          rules={[{ required: true }]}
           valueEnum={{
             open: 'Unresolved',
             closed: 'Resolved',
-          }}
-          rules={[{ required: true }]}
+          }}          
         />
         <ProFormText
           width="md"
           name="totalHorasMes"
+          rules={[{ required: true }]}
           label={<FormattedMessage id="pages.instructor.totalHorasMes" />}
         />
       </ProForm.Group>
@@ -126,11 +127,13 @@ const CreateForm: React.FC<FormProps> = (props) => {
           width="md"
           name="fechaInicioContrato"
           label={<FormattedMessage id="pages.instructor.fechaInicioContrato" />}
+          rules={[{ required: true }]}
         />
         <ProFormDatePicker
           width="md"
           name="fechaFinContrato"
           label={<FormattedMessage id="pages.instructor.fechaFinContrato" />}
+          rules={[{ required: true }]}
         />
       </ProForm.Group>
       <ProForm.Group>
@@ -141,8 +144,8 @@ const CreateForm: React.FC<FormProps> = (props) => {
         />
         <ProFormText
           width="md"
-          name="areaDeConocimiento"
-          label={<FormattedMessage id="pages.instructor.areaDeConocimiento" />}
+          name="competencia"
+          label={<FormattedMessage id="pages.instructor.competencia" />}
         />
       </ProForm.Group>
       <ProForm.Group>
@@ -150,6 +153,11 @@ const CreateForm: React.FC<FormProps> = (props) => {
           width="md"
           name="resultadoDeAprendizaje"
           label={<FormattedMessage id="pages.instructor.resultadoDeAprendizaje" />}
+        />
+        <ProFormText
+          width="md"
+          name="areaDeConocimiento"
+          label={<FormattedMessage id="pages.instructor.areaDeConocimiento" />}
         />
       </ProForm.Group>
     </ModalForm>

@@ -54,6 +54,13 @@ export async function getAll(
   };
 }
 
+/** DELETE /api/instructors */
+export async function getOne(id: number) {
+  return request(`${serverUrl}/api/Instructor/${id}`, {
+    method: 'GET',
+  });
+}
+
 /** POST /api/instructors */
 export async function addOne(options?: { [key: string]: any }) {
   console.log('/api/instructors addItem options:', options);

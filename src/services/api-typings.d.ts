@@ -107,13 +107,29 @@ declare namespace API {
     apellidos: string;
     tipoVinculacion: string;
     totalHorasMes: number;
+    fechaInicioContrato: string;
+    fechaFinContrato: string;
+    coordinador?: string;
+    competencia?: string;
+    resultadoDeAprendizaje?: string;
+    areaDeConocimiento?: string;
+  };
+
+  export interface IInstructor {
+    personaId: number;
+    tipoIdentificacion: string;
+    numeroIdentificacion: string;
+    nombres: string;
+    apellidos: string;
+    tipoVinculacion: string;
+    totalHorasMes: number;
     fechaInicioContrato?: string;
     fechaFinContrato?: string;
     coordinador?: string;
     competencia: string;
     resultadoDeAprendizaje?: string;
     areaDeConocimiento: string;
-  };
+  }
 
   export type InstructorList = {
     data: Instructor[];

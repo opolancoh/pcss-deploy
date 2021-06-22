@@ -69,6 +69,8 @@ export default {
   'pages.instructor.fechaInicioContrato': 'Fecha inicio contrato',
   'pages.instructor.fechaFinContrato': 'Fecha fin contrato',
   'pages.instructor.coordinador': 'Coordinador',
-  'pages.instructor.areaDeConocimiento': 'Área de conocimiento',
+  'pages.instructor.competencia': 'Competencia',
   'pages.instructor.resultadoDeAprendizaje': 'Resultado de aprendizaje',
+  'pages.instructor.areaDeConocimiento': 'Núcleo de conocimiento',
+  
 };

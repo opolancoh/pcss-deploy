@@ -55,7 +55,7 @@
     icon: 'table',
     path: '/list',
     component: './TableList',
-  }, */
+  }, */ 
   {
     path: '/',
     redirect: '/home',
