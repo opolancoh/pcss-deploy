@@ -1,19 +1,20 @@
 import React, { useState, useRef } from 'react';
-import { PlusOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
-import { Modal, message, Button, ConfigProvider } from 'antd';
+import { PlusOutlined } from '@ant-design/icons';
+import { Modal, message, Button, Drawer, ConfigProvider } from 'antd';
 import { useIntl, FormattedMessage } from 'umi';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
+import type { ProDescriptionsItemProps } from '@ant-design/pro-descriptions';
+import ProDescriptions from '@ant-design/pro-descriptions';
 
 // import { ModalForm, ProFormText, ProFormTextArea } from '@ant-design/pro-form';
 // import type { ProDescriptionsItemProps } from '@ant-design/pro-descriptions';
 // import ProDescriptions from '@ant-design/pro-descriptions';
 
-import { getAll, removeOne } from '@/services/api/instructor-api';
-import CreateForm from './CreateForm';
-// import type { FormValueType } from './UpdateForm';
-// import UpdateForm from './UpdateForm';
 import { thousandsSeparatorWithDots } from '@/utils/utils';
+import { getAll, removeOne } from '@/services/api/instructor-api';
+import AddUpdate from './AddUpdate';
+import Details from './Details';
 
 const { confirm } = Modal;
 
@@ -41,13 +42,12 @@ const { confirm } = Modal;
   }
 }; */
 
-function showRemoveConfirm({ title, content, handleOnOk }) {
+function showRemoveConfirm({ title, content, handleOnOk, okText, cancelText }) {
   confirm({
     title,
-    icon: <ExclamationCircleOutlined />,
     content,
-    cancelText: 'No',
-
+    okText,
+    cancelText,
     onOk() {
       handleOnOk();
     },
@@ -55,11 +55,10 @@ function showRemoveConfirm({ title, content, handleOnOk }) {
 }
 
 const TableList: React.FC = () => {
-  /** Pop-up window update */
-  // const [showDetail, setShowDetail] = useState<boolean>(false);
+  const [showDetail, setShowDetail] = useState<boolean>(false);
   /** Pop-up window create */
   const [createFormVisible, setCreateFormVisible] = useState<boolean>(false);
-  const [removeModalVisible, setRemoveModalVisible] = useState<boolean>(false);
+  // const [removeModalVisible, setRemoveModalVisible] = useState<boolean>(false);
   /** Pop-up window update */
   // const [updateModalVisible, handleUpdateModalVisible] = useState<boolean>(false);
 
@@ -87,7 +86,7 @@ const TableList: React.FC = () => {
           <a
             onClick={() => {
               setCurrentRow(entity);
-              // setShowDetail(true);
+              setShowDetail(true);
             }}
           >
             {`${entity.nombres} ${entity.apellidos}`}
@@ -125,12 +124,13 @@ const TableList: React.FC = () => {
         <a
           key="detail"
           onClick={() => {
-            console.log('app.item.detail', record);
+            setCurrentRow(record);
+            setShowDetail(true);
           }}
         >
           <FormattedMessage id="app.item.detail" />
         </a>,
-        <a
+        <a aria-disabled
           key="update"
           onClick={() => {
             console.log('app.item.update', record);
@@ -147,6 +147,12 @@ const TableList: React.FC = () => {
                 id: 'app.item.removeMessage',
               }),
               content: `${record.nombres} ${record.apellidos}`,
+              okText: intl.formatMessage({
+                id: 'app.ok',
+              }),
+              cancelText: intl.formatMessage({
+                id: 'app.cancel',
+              }),
               handleOnOk: async () => {
                 const hide = message.loading(
                   intl.formatMessage({
@@ -210,7 +216,7 @@ const TableList: React.FC = () => {
           </Button>,
         ]}
       />
-      <CreateForm
+      <AddUpdate
         onSubmit={async (success) => {
           console.log('Table onSubmit', success);
           if (success) {
@@ -229,6 +235,15 @@ const TableList: React.FC = () => {
         formVisible={createFormVisible}
         values={currentRow || {}}
       />
+      {showDetail && currentRow?.personaId && (
+        <Details
+          id={currentRow?.personaId}
+          visible={showDetail}
+          onClose={() => {
+            setShowDetail(false);
+          }}
+        />
+      )}
     </ConfigProvider>
   );
 };

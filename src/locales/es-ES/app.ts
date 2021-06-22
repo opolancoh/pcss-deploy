@@ -1,7 +1,10 @@
 export default {
-  'app.processing.loading':'procesando',
-  'app.processing.success':'proceso exitoso',
-  'app.processing.error':'proceso no exitoso',
+  'app.ok': 'Aceptar',
+  'app.cancel': 'Cancelar',
+  'app.details': 'Detalles',
+  'app.processing.loading': 'procesando',
+  'app.processing.success': 'proceso exitoso',
+  'app.processing.error': 'proceso no exitoso',
   'app.copyright.produced': 'SENA Derechos reservados.',
   'app.preview.down.block': 'Download this page to your local project',
   'app.home.link.fetch-blocks': 'Get all block',

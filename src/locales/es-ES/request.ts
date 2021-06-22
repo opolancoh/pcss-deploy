@@ -13,7 +13,7 @@ export default {
   'app.request.410':
     'The requested resource is permanently deleted and will no longer be available. ',
   'app.request.422': 'When creating an object, a validation error occurred. ',
-  'app.request.500': 'An error occurred on the server, please check the server. ',
+  'app.request.500': 'Error interno del servidor, por favor contacte al administraor. ',
   'app.request.502': 'Gateway error. ',
   'app.request.503': 'The service is unavailable. ',
   'app.request.504': 'The gateway timed out. ',
