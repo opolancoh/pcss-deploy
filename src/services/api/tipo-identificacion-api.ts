@@ -6,7 +6,7 @@ import { serverUrl } from '@/app-config';
 
 /** GET All */
 export async function getAll() {
-  return request<API.TipoVinculacionList>(`${serverUrl}/api/TipoVinculacion`, {
+  return request<API.TipoIdentificacionList>(`${serverUrl}/api/TipoIdentificacion`, {
     method: 'GET',
   });
 }

@@ -20,7 +20,9 @@ export default {
   'app.item.update': 'Editar',
   'app.item.remove': 'Eliminar',
   'app.item.detail': 'Detalle',
-  'app.item.addItem': 'Nuevo elemento',
+  'app.item.addItem': 'Crear elemento',
+  'app.item.updateItem': 'Editar elemento',
   'app.item.removeMessage': '¿Esta seguro que desea eliminar este elemento?',
   'app.item.removedMessage': 'Elemento eliminado!',
+  'app.form.requiredMsg': 'Este campo es requerido.',
 };

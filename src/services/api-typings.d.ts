@@ -113,6 +113,7 @@ declare namespace API {
     competencia?: string;
     resultadoDeAprendizaje?: string;
     areaDeConocimiento?: string;
+    tipoPersonaId?: number;
   };
 
   export interface IInstructor {
@@ -144,6 +145,13 @@ declare namespace API {
       total: number;
     };
   };
+
+  export type TipoIdentificacion = {
+    tipoIdentificacionId: number;
+    descripcion: string;
+  };
+
+  export type TipoIdentificacionList = TipoIdentificacion[];
 
   export type TipoVinculacion = {
     tipoVinculacionId: number;
