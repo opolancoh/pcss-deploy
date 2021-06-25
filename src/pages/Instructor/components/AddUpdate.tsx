@@ -1,125 +1,125 @@
-import React from 'react';
-import { message } from 'antd';
+import React, { useEffect, useState } from 'react';
 import ProForm, {
   ModalForm,
   ProFormSelect,
   ProFormText,
   ProFormDatePicker,
+  ProFormDigit,
 } from '@ant-design/pro-form';
 import { useIntl, FormattedMessage } from 'umi';
 
 import { addOne } from '@/services/api/instructor-api';
+import { getAll as getAllTipoIdentificacion } from '@/services/api/tipo-identificacion-api';
+import { getAll as getAllTipoVinculacion } from '@/services/api/tipo-vinculacion-api';
 
-const waitTime = (time: number = 100) => {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve(true);
-      }, time);
-    });
-  };
-
-/**
- * Add new item
- *
- * @param fields
- */
-const handleAdd = async (fields: API.Instructor) => {  
-  const hide = message.loading('procesando');
-  try {
-    const response = await addOne({ ...fields });
-    console.log('response', response)
-    await waitTime(3000);
-    hide();
-    return true;
-  } catch (error) {
-    hide();
-    message.error('添加失败请重试！');
-    return false;
-  }
+const fetchTipoIdentificacion = async () => {
+  const result = await getAllTipoIdentificacion();
+  return result.map((d) => ({ value: d.tipoIdentificacionId, label: d.descripcion }));
 };
 
-export type FormValueType = {
-  target?: string;
-  template?: string;
-  type?: string;
-  time?: string;
-  frequency?: string;
-} & Partial<API.InstructorList>;
+const fetchTipoVinculacion = async () => {
+  const result = await getAllTipoVinculacion();
+  return result.map((d) => ({ value: d.tipoVinculacionId, label: d.descripcion }));
+};
 
 export type FormProps = {
-  onCancel: (flag?: boolean, formVals?: FormValueType) => void;
+  onCancel: () => void;
   onSubmit: (result: boolean) => Promise<void>;
   formVisible: boolean;
-  values: Partial<API.Instructor>;
+  isEditMode: boolean;
+  item: Partial<API.Instructor>;
 };
 
-const CreateForm: React.FC<FormProps> = (props) => {
+const AddUpdateForm: React.FC<FormProps> = (props) => {
+  console.log('item', props.item);
   const intl = useIntl();
+
+  const formTitleId = props.isEditMode ? 'app.item.updateItem' : 'app.item.addItem';
+  const submitText = intl.formatMessage({
+    id: 'app.ok',
+  });
+  const resetText = intl.formatMessage({
+    id: 'app.cancel',
+  });
+  const requiredMsg = intl.formatMessage({
+    id: 'app.form.requiredMsg',
+  });
+
+  const handleAdd = async (fields: API.Instructor) => {
+    try {
+      await addOne(fields);
+      return true;
+    } catch {
+      return false;
+    }
+  };
 
   return (
     <ModalForm<API.Instructor>
-      title={intl.formatMessage({
-        id: 'app.item.addItem',
-      })}
       visible={props.formVisible}
+      title={intl.formatMessage({
+        id: formTitleId,
+      })}
+      submitter={{
+        searchConfig: {
+          submitText,
+          resetText,
+        },
+      }}
       modalProps={{
         onCancel: () => props.onCancel(),
       }}
       onFinish={async (values) => {
-        const result = await handleAdd(values);
-        props.onSubmit(result);
+        // this new value must be deleted, the field tipoPersonaId must be set on the server
+        const newValues = { ...values, tipoPersonaId: 1 };
+        const result = await handleAdd(newValues);
+        return result;
       }}
+      initialValues={props.item}
     >
       <ProForm.Group>
-      <ProForm.Group>
-        <ProFormSelect
-          width="md"
-          name="tipoIdentificacion"
-          label={<FormattedMessage id="app.person.idType" />}
-          options={[
-            {
-              value: 'cedula',
-              label: 'Cédula',
-            },
-          ]}
-          rules={[{ required: true }]}
-        />
+        <ProForm.Group>
+          <ProFormSelect
+            width="md"
+            name="tipoIdentificacionId"
+            label={<FormattedMessage id="app.person.idType" />}
+            request={async () => await fetchTipoIdentificacion()}
+            rules={[{ required: true, message: requiredMsg }]}
+          />
+          <ProFormText
+            width="md"
+            name="numeroIdentificacion"
+            label={<FormattedMessage id="app.person.idNumber" />}
+            rules={[{ required: true, message: requiredMsg }]}
+          />
+        </ProForm.Group>
         <ProFormText
-          width="md"
-          name="numeroIdentificacion"
-          label={<FormattedMessage id="app.person.idNumber" />}
-          rules={[{ required: true }]}
-        />
-      </ProForm.Group>
-      <ProFormText
           width="md"
           name="nombres"
           label={<FormattedMessage id="app.person.names" />}
-          rules={[{ required: true }]}
+          rules={[{ required: true, message: requiredMsg }]}
         />
         <ProFormText
           width="md"
           name="apellidos"
           label={<FormattedMessage id="app.person.surnames" />}
-          rules={[{ required: true }]}
+          rules={[{ required: true, message: requiredMsg }]}
         />
       </ProForm.Group>
       <ProForm.Group>
         <ProFormSelect
           width="md"
-          name="tipoVinculacion"
+          name="tipoVinculacionId"
           label={<FormattedMessage id="pages.instructor.tipoVinculacion" />}
-          rules={[{ required: true }]}
-          valueEnum={{
-            open: 'Unresolved',
-            closed: 'Resolved',
-          }}          
+          request={async () => await fetchTipoVinculacion()}
+          rules={[{ required: true, message: requiredMsg }]}
         />
-        <ProFormText
+        <ProFormDigit
           width="md"
           name="totalHorasMes"
-          rules={[{ required: true }]}
           label={<FormattedMessage id="pages.instructor.totalHorasMes" />}
+          rules={[{ required: true, message: requiredMsg }]}
+          min={0}
         />
       </ProForm.Group>
       <ProForm.Group>
@@ -127,13 +127,13 @@ const CreateForm: React.FC<FormProps> = (props) => {
           width="md"
           name="fechaInicioContrato"
           label={<FormattedMessage id="pages.instructor.fechaInicioContrato" />}
-          rules={[{ required: true }]}
+          rules={[{ required: true, message: requiredMsg }]}
         />
         <ProFormDatePicker
           width="md"
           name="fechaFinContrato"
           label={<FormattedMessage id="pages.instructor.fechaFinContrato" />}
-          rules={[{ required: true }]}
+          rules={[{ required: true, message: requiredMsg }]}
         />
       </ProForm.Group>
       <ProForm.Group>
@@ -164,4 +164,4 @@ const CreateForm: React.FC<FormProps> = (props) => {
   );
 };
 
-export default CreateForm;
+export default AddUpdateForm;

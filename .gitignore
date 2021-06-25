@@ -40,3 +40,8 @@ firebase.json
 .eslintcache
 
 build
+
+# Docker
+.dockerignore
+docker-compose.yml
+Dockerfile

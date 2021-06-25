@@ -62,10 +62,11 @@ export async function getOne(id: number) {
 }
 
 /** POST /api/instructors */
-export async function addOne(options?: { [key: string]: any }) {
-  console.log('/api/instructors addItem options:', options);
+export async function addOne(data: API.Instructor, options?: { [key: string]: any }) {
+  console.log('/api/instructors addItem data:', data);
   return request<API.Instructor>(`${serverUrl}/api/Instructor`, {
     method: 'POST',
+    data,
     ...(options || {}),
   });
 }
