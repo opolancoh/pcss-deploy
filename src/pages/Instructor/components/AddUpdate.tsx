@@ -73,26 +73,32 @@ const AddUpdateForm: React.FC<FormProps> = (props) => {
         // this new value must be deleted, the field tipoPersonaId must be set on the server
         const newValues = { ...values, tipoPersonaId: 1 };
         const result = await handleAdd(newValues);
-        return result;
+        props.onSubmit(result);
       }}
       initialValues={props.item}
     >
+      <ProFormText
+        width="md"
+        name="personaId"
+        rules={[{ required: true, message: requiredMsg }]}
+        hidden={true}
+      />
       <ProForm.Group>
-        <ProForm.Group>
-          <ProFormSelect
-            width="md"
-            name="tipoIdentificacionId"
-            label={<FormattedMessage id="app.person.idType" />}
-            request={async () => await fetchTipoIdentificacion()}
-            rules={[{ required: true, message: requiredMsg }]}
-          />
-          <ProFormText
-            width="md"
-            name="numeroIdentificacion"
-            label={<FormattedMessage id="app.person.idNumber" />}
-            rules={[{ required: true, message: requiredMsg }]}
-          />
-        </ProForm.Group>
+        <ProFormSelect
+          width="md"
+          name="tipoIdentificacionId"
+          label={<FormattedMessage id="app.person.idType" />}
+          request={async () => await fetchTipoIdentificacion()}
+          rules={[{ required: true, message: requiredMsg }]}
+        />
+        <ProFormText
+          width="md"
+          name="numeroIdentificacion"
+          label={<FormattedMessage id="app.person.idNumber" />}
+          rules={[{ required: true, message: requiredMsg }]}
+        />
+      </ProForm.Group>
+      <ProForm.Group>
         <ProFormText
           width="md"
           name="nombres"
