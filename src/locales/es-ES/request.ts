@@ -5,7 +5,7 @@ export default {
   'app.request.202': 'A request has entered the background queue (asynchronous task). ',
   'app.request.204': 'Data deleted successfully. ',
   'app.request.400': 'Solicitud incorrecta.',
-  'app.request.401': 'The user does not have permission (token, username, password error). ',
+  'app.request.401': 'Error de autenticación. ',
   'app.request.403': 'The user is authorized, but access is forbidden. ',
   'app.request.404': 'Recurso no existente. ',
   'app.request.405': 'The request method is not allowed. ',
