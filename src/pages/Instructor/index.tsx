@@ -232,6 +232,7 @@ const TableList: React.FC = () => {
       />
       <AddUpdate
         onSubmit={async (success) => {
+          console.log('success', success)
           if (success) {
             setAddUpdateFormVisible(false);
             setCurrentRow(undefined);
