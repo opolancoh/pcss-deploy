@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import ProForm, {
   ModalForm,
   ProFormSelect,
@@ -6,9 +6,10 @@ import ProForm, {
   ProFormDatePicker,
   ProFormDigit,
 } from '@ant-design/pro-form';
-import { useIntl, FormattedMessage } from 'umi';
+import { FormattedMessage } from 'umi';
+import { injectIntl } from 'react-intl';
 
-import { addOne } from '@/services/api/instructor-api';
+import { addOne, updateOne } from '@/services/api/instructor-api';
 import { getAll as getAllTipoIdentificacion } from '@/services/api/tipo-identificacion-api';
 import { getAll as getAllTipoVinculacion } from '@/services/api/tipo-vinculacion-api';
 
@@ -25,16 +26,16 @@ const fetchTipoVinculacion = async () => {
 export type FormProps = {
   onCancel: () => void;
   onSubmit: (result: boolean) => Promise<void>;
-  formVisible: boolean;
+  windowVisible: boolean;
   isEditMode: boolean;
   item: Partial<API.Instructor>;
+  intl: any;
 };
 
 const AddUpdateForm: React.FC<FormProps> = (props) => {
-  console.log('item', props.item);
-  const intl = useIntl();
+  const { windowVisible, isEditMode, item, intl } = props;
 
-  const formTitleId = props.isEditMode ? 'app.item.updateItem' : 'app.item.addItem';
+  const formTitleId = isEditMode ? 'app.item.updateItem' : 'app.item.addItem';
   const submitText = intl.formatMessage({
     id: 'app.ok',
   });
@@ -47,7 +48,8 @@ const AddUpdateForm: React.FC<FormProps> = (props) => {
 
   const handleAdd = async (fields: API.Instructor) => {
     try {
-      await addOne(fields);
+      if (isEditMode) await updateOne(fields);
+      else await addOne(fields);
       return true;
     } catch {
       return false;
@@ -56,7 +58,7 @@ const AddUpdateForm: React.FC<FormProps> = (props) => {
 
   return (
     <ModalForm<API.Instructor>
-      visible={props.formVisible}
+      visible={windowVisible}
       title={intl.formatMessage({
         id: formTitleId,
       })}
@@ -75,7 +77,7 @@ const AddUpdateForm: React.FC<FormProps> = (props) => {
         const result = await handleAdd(newValues);
         props.onSubmit(result);
       }}
-      initialValues={props.item}
+      initialValues={item}
     >
       <ProFormText
         width="md"
@@ -170,4 +172,4 @@ const AddUpdateForm: React.FC<FormProps> = (props) => {
   );
 };
 
-export default AddUpdateForm;
+export default injectIntl(AddUpdateForm);

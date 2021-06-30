@@ -1,1 +1,1 @@
-export const serverUrl = 'https://senafichapi.azurewebsites.net';
+export const apiRootUrl = 'https://senafichapi.azurewebsites.net';

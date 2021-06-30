@@ -2,11 +2,11 @@
 /* eslint-disable */
 import { request } from 'umi';
 
-import { serverUrl } from '@/app-config';
+import { apiRootUrl } from '@/app-config';
 
 /** GET All */
 export async function getAll() {
-  return request<API.TipoVinculacionList>(`${serverUrl}/api/TipoVinculacion`, {
+  return request<API.TipoVinculacionList>(`${apiRootUrl}/api/TipoVinculacion`, {
     method: 'GET',
   });
 }

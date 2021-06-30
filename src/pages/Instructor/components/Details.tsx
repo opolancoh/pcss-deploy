@@ -9,14 +9,6 @@ import { useEffect } from 'react';
 
 import { formatDate } from '@/utils/utils';
 
-export type FormValueType = {
-  target?: string;
-  template?: string;
-  type?: string;
-  time?: string;
-  frequency?: string;
-} & Partial<API.Instructor>;
-
 const pStyle = {
   fontSize: 16,
   color: 'rgba(0,0,0,0.85)',

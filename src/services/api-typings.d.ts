@@ -101,6 +101,7 @@ declare namespace API {
 
   export type Instructor = {
     personaId: number;
+    tipoIdentificacionId: number;
     tipoIdentificacion: string;
     numeroIdentificacion: string;
     nombres: string;
@@ -115,22 +116,6 @@ declare namespace API {
     areaDeConocimiento?: string;
     tipoPersonaId?: number;
   };
-
-  export interface IInstructor {
-    personaId: number;
-    tipoIdentificacion: string;
-    numeroIdentificacion: string;
-    nombres: string;
-    apellidos: string;
-    tipoVinculacion: string;
-    totalHorasMes: number;
-    fechaInicioContrato?: string;
-    fechaFinContrato?: string;
-    coordinador?: string;
-    competencia: string;
-    resultadoDeAprendizaje?: string;
-    areaDeConocimiento: string;
-  }
 
   export type InstructorList = {
     data: Instructor[];
