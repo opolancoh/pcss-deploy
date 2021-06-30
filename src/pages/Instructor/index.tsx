@@ -69,10 +69,7 @@ const TableList: React.FC = () => {
     try {
       const result = await getOne(id);
       setCurrentRow(result);
-      setIsEditMode(true);
-      setAddUpdateFormVisible(true);
       hide();
-      // message.success('配置成功');
     } catch (error) {
       hide();
       message.error(
@@ -149,6 +146,8 @@ const TableList: React.FC = () => {
           key="update"
           onClick={async () => {
             await handleGetOne(record.personaId);
+            setIsEditMode(true);
+            setAddUpdateFormVisible(true);
           }}
         >
           <FormattedMessage id="app.item.update" />
@@ -222,7 +221,7 @@ const TableList: React.FC = () => {
             type="primary"
             key="primary"
             onClick={() => {
-              setIsEditMode(true);
+              setIsEditMode(false);
               setAddUpdateFormVisible(true);
             }}
           >
@@ -230,25 +229,27 @@ const TableList: React.FC = () => {
           </Button>,
         ]}
       />
-      <AddUpdate
-        onSubmit={async (success) => {
-          console.log('success', success)
-          if (success) {
+      {addUpdateFormVisible && (
+        <AddUpdate
+          onSubmit={async (success) => {
+            console.log('success', success);
+            if (success) {
+              setAddUpdateFormVisible(false);
+              setCurrentRow(undefined);
+              if (actionRef.current) {
+                actionRef.current.reload();
+              }
+            }
+          }}
+          onCancel={() => {
             setAddUpdateFormVisible(false);
             setCurrentRow(undefined);
-            if (actionRef.current) {
-              actionRef.current.reload();
-            }
-          }
-        }}
-        onCancel={() => {
-          setAddUpdateFormVisible(false);
-          setCurrentRow(undefined);
-        }}
-        formVisible={addUpdateFormVisible}
-        isEditMode={isEditMode}
-        item={currentRow || {}}
-      />
+          }}
+          formVisible={addUpdateFormVisible}
+          isEditMode={isEditMode}
+          item={currentRow || {}}
+        />
+      )}
       {showDetail && currentRow?.personaId && (
         <Details
           id={currentRow?.personaId}

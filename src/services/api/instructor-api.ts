@@ -2,31 +2,10 @@
 /* eslint-disable */
 import { request } from 'umi';
 
-import { serverUrl } from '@/app-config';
+import { apiRootUrl } from '@/app-config';
 
-/** GET All */
-/* export async function getAll(
-  params: {
-    // query
-    // Current page 
-    current?: number;
-    // Page size 
-    pageSize?: number;
-  },
-  options?: { [key: string]: any },
-) {
-  return request<API.InstructorGetAllResponse>(
-    'https://senafichapi.azurewebsites.net/api/Instructor/GetInstructores',
-    {
-      method: 'GET',
-      params: {
-        ...params,
-        page: params.current,
-      },
-      ...(options || {}),
-    },
-  );
-} */
+const entityPath = 'Instructor';
+
 export async function getAll(
   params: {
     // query
@@ -38,7 +17,7 @@ export async function getAll(
   options?: { [key: string]: any },
 ): Promise<ANT.ProTableDataSource> {
   const response = await request<API.GetAllResponse>(
-    `${serverUrl}/api/Instructor/GetInstructores`,
+    `${apiRootUrl}/api/${entityPath}/GetInstructores`,
     {
       method: 'GET',
       params: {
@@ -54,34 +33,31 @@ export async function getAll(
   };
 }
 
-/** DELETE /api/instructors */
 export async function getOne(id: number) {
-  return request(`${serverUrl}/api/Instructor/${id}`, {
+  return request(`${apiRootUrl}/api/${entityPath}/${id}`, {
     method: 'GET',
   });
 }
 
-/** POST /api/instructors */
 export async function addOne(data: API.Instructor, options?: { [key: string]: any }) {
   console.log('/api/instructors addItem data:', data);
-  return request<API.Instructor>(`${serverUrl}/api/Instructor`, {
+  return request<API.Instructor>(`${apiRootUrl}/api/${entityPath}`, {
     method: 'POST',
     data,
     ...(options || {}),
   });
 }
 
-/** PUT /api/instructors */
-export async function updateOne(options?: { [key: string]: any }) {
-  return request<API.Instructor>(`${serverUrl}/api/Instructor`, {
+export async function updateOne(data: API.Instructor, options?: { [key: string]: any }) {
+  return request<API.Instructor>(`${apiRootUrl}/api/${entityPath}/${data.personaId}`, {
     method: 'PUT',
+    data,
     ...(options || {}),
   });
 }
 
-/** DELETE /api/instructors */
 export async function removeOne(id: number) {
-  return request(`${serverUrl}/api/Instructor/${id}`, {
+  return request(`${apiRootUrl}/api/${entityPath}/${id}`, {
     method: 'DELETE',
   });
 }
