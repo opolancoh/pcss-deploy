@@ -23,17 +23,17 @@ const fetchTipoVinculacion = async () => {
   return result.map((d) => ({ value: d.tipoVinculacionId, label: d.descripcion }));
 };
 
-export type FormProps = {
+type FormProps = {
   onCancel: () => void;
   onSubmit: (result: boolean) => Promise<void>;
-  windowVisible: boolean;
+  visible: boolean;
   isEditMode: boolean;
   item: Partial<API.Instructor>;
   intl: any;
 };
 
-const AddUpdateForm: React.FC<FormProps> = (props) => {
-  const { windowVisible, isEditMode, item, intl } = props;
+const AddUpdate: React.FC<FormProps> = (props) => {
+  const { visible, isEditMode, item, intl } = props;
 
   const formTitleId = isEditMode ? 'app.item.updateItem' : 'app.item.addItem';
   const submitText = intl.formatMessage({
@@ -46,7 +46,7 @@ const AddUpdateForm: React.FC<FormProps> = (props) => {
     id: 'app.form.requiredMsg',
   });
 
-  const handleAdd = async (fields: API.Instructor) => {
+  const handleAddUpdate = async (fields: API.Instructor) => {
     try {
       if (isEditMode) await updateOne(fields);
       else await addOne(fields);
@@ -58,7 +58,7 @@ const AddUpdateForm: React.FC<FormProps> = (props) => {
 
   return (
     <ModalForm<API.Instructor>
-      visible={windowVisible}
+      visible={visible}
       title={intl.formatMessage({
         id: formTitleId,
       })}
@@ -72,19 +72,12 @@ const AddUpdateForm: React.FC<FormProps> = (props) => {
         onCancel: () => props.onCancel(),
       }}
       onFinish={async (values) => {
-        // this new value must be deleted, the field tipoPersonaId must be set on the server
-        const newValues = { ...values, tipoPersonaId: 1 };
-        const result = await handleAdd(newValues);
+        const result = await handleAddUpdate(values);
         props.onSubmit(result);
       }}
       initialValues={item}
     >
-      <ProFormText
-        width="md"
-        name="personaId"
-        rules={[{ required: true, message: requiredMsg }]}
-        hidden={true}
-      />
+      <ProFormText width="md" name="personaId" hidden={true} />
       <ProForm.Group>
         <ProFormSelect
           width="md"
@@ -172,4 +165,4 @@ const AddUpdateForm: React.FC<FormProps> = (props) => {
   );
 };
 
-export default injectIntl(AddUpdateForm);
+export default injectIntl(AddUpdate);

@@ -26,3 +26,9 @@ export const thousandsSeparatorWithDots = (value: string): string =>
   value.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
 
 export const formatDate = (value: string | undefined): string => moment(value).format('YYYY-MM-DD');
+
+export enum MessageId {
+  Success = 'app.processing.success',
+  Error = 'app.processing.error',
+  Loading = 'app.processing.loading',
+}
