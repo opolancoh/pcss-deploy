@@ -1,11 +1,6 @@
 import React from 'react';
-import { message } from 'antd';
-import { Drawer, List, Avatar, Divider, Col, Row } from 'antd';
+import { Drawer, Col, Row } from 'antd';
 import { injectIntl } from 'react-intl';
-
-import { getOne } from '@/services/api/instructor-api';
-import { useState } from 'react';
-import { useEffect } from 'react';
 
 import { formatDate } from '@/utils/utils';
 
@@ -17,7 +12,12 @@ const pStyle = {
   marginBottom: 16,
 };
 
-const DescriptionItem = ({ title, content }) => (
+type ColumnItem = {
+  title: string;
+  content?: string;
+};
+
+const DescriptionItem: React.FC<ColumnItem> = ({ title, content }) => (
   <div
     style={{
       fontSize: 14,
@@ -40,50 +40,14 @@ const DescriptionItem = ({ title, content }) => (
 );
 
 export type Props = {
-  id: number;
   visible: boolean;
+  item: Partial<API.Instructor>;
   onClose: () => void;
   intl: any;
 };
 
 const Details: React.FC<Props> = (props) => {
-  const { id, intl } = props;
-
-  const [data, setData] = useState<Partial<API.Instructor>>({});
-
-  useEffect(() => {
-    const fetchData = async () => {
-      // setIsError(false);
-      // setIsLoading(true);
-
-      try {
-        const result = await getOne(id);
-        console.log('result', result);
-        setData(result);
-      } catch (error) {
-        // setIsError(true);
-        console.log('error', error);
-      }
-
-      // setIsLoading(false);
-    };
-
-    fetchData();
-  }, [id]);
-
-  /*   const handleGetOne = async () => {
-    // const hide = message.loading('procesando');
-    try {
-      const response = await getOne(id);
-      console.log('response', response);
-      // hide();
-      return true;
-    } catch (error) {
-      // hide();
-      // message.error('添加失败请重试！');
-      return false;
-    }
-  }; */
+  const { item, intl } = props;
 
   return (
     <Drawer width={640} placement="right" visible={props.visible} onClose={props.onClose}>
@@ -92,14 +56,14 @@ const Details: React.FC<Props> = (props) => {
           id: 'app.details',
         })}
       </p>
-      <p style={pStyle}>{`${data.nombres} ${data.apellidos}`}</p>
+      <p style={pStyle}>{`${item.nombres} ${item.apellidos}`}</p>
       <Row>
         <Col span={12}>
           <DescriptionItem
             title={intl.formatMessage({
               id: 'app.person.idType',
             })}
-            content={data.tipoIdentificacion}
+            content={item.tipoIdentificacion}
           />
         </Col>
         <Col span={12}>
@@ -107,7 +71,7 @@ const Details: React.FC<Props> = (props) => {
             title={intl.formatMessage({
               id: 'app.person.idNumber',
             })}
-            content={data.numeroIdentificacion}
+            content={item.numeroIdentificacion}
           />
         </Col>
       </Row>
@@ -117,7 +81,7 @@ const Details: React.FC<Props> = (props) => {
             title={intl.formatMessage({
               id: 'pages.instructor.tipoVinculacion',
             })}
-            content={data.tipoVinculacion}
+            content={item.tipoVinculacion}
           />
         </Col>
         <Col span={12}>
@@ -125,7 +89,7 @@ const Details: React.FC<Props> = (props) => {
             title={intl.formatMessage({
               id: 'pages.instructor.totalHorasMes',
             })}
-            content={data.totalHorasMes}
+            content={item.totalHorasMes?.toString()}
           />
         </Col>
       </Row>
@@ -135,7 +99,7 @@ const Details: React.FC<Props> = (props) => {
             title={intl.formatMessage({
               id: 'pages.instructor.fechaInicioContrato',
             })}
-            content={formatDate(data.fechaInicioContrato)}
+            content={formatDate(item.fechaInicioContrato)}
           />
         </Col>
         <Col span={12}>
@@ -143,7 +107,7 @@ const Details: React.FC<Props> = (props) => {
             title={intl.formatMessage({
               id: 'pages.instructor.fechaFinContrato',
             })}
-            content={formatDate(data.fechaFinContrato)}
+            content={formatDate(item.fechaFinContrato)}
           />
         </Col>
       </Row>
@@ -153,7 +117,7 @@ const Details: React.FC<Props> = (props) => {
             title={intl.formatMessage({
               id: 'pages.instructor.coordinador',
             })}
-            content={data.coordinador || '-'}
+            content={item.coordinador || '-'}
           />
         </Col>
         <Col span={12}>
@@ -161,7 +125,7 @@ const Details: React.FC<Props> = (props) => {
             title={intl.formatMessage({
               id: 'pages.instructor.competencia',
             })}
-            content={data.competencia || '-'}
+            content={item.competencia || '-'}
           />
         </Col>
       </Row>
@@ -171,7 +135,7 @@ const Details: React.FC<Props> = (props) => {
             title={intl.formatMessage({
               id: 'pages.instructor.resultadoDeAprendizaje',
             })}
-            content={data.resultadoDeAprendizaje || '-'}
+            content={item.resultadoDeAprendizaje || '-'}
           />
         </Col>
         <Col span={12}>
@@ -179,7 +143,7 @@ const Details: React.FC<Props> = (props) => {
             title={intl.formatMessage({
               id: 'pages.instructor.areaDeConocimiento',
             })}
-            content={data.areaDeConocimiento || '-'}
+            content={item.areaDeConocimiento || '-'}
           />
         </Col>
       </Row>

@@ -1,69 +1,29 @@
 import React, { useState, useRef } from 'react';
-import { PlusOutlined } from '@ant-design/icons';
-import { Modal, message, Button, ConfigProvider } from 'antd';
+import { ExclamationCircleOutlined, PlusOutlined } from '@ant-design/icons';
+import { message, Button, ConfigProvider, Modal } from 'antd';
 import { useIntl, FormattedMessage } from 'umi';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
 
-// import { ModalForm, ProFormText, ProFormTextArea } from '@ant-design/pro-form';
-// import type { ProDescriptionsItemProps } from '@ant-design/pro-descriptions';
-// import ProDescriptions from '@ant-design/pro-descriptions';
-
-import { thousandsSeparatorWithDots } from '@/utils/utils';
+import { thousandsSeparatorWithDots, MessageId } from '@/utils/utils';
 import { getAll, getOne, removeOne } from '@/services/api/instructor-api';
 import AddUpdate from './components/AddUpdate';
 import Details from './components/Details';
 
 const { confirm } = Modal;
 
-/**
- * 更新节点
- *
- * @param fields
- */
-/* const handleUpdate = async (fields: FormValueType) => {
-  const hide = message.loading('正在配置');
-  try {
-    await updateItem({
-      name: fields.name,
-      desc: fields.desc,
-      key: fields.key,
-    });
-    hide();
-
-    message.success('配置成功');
-    return true;
-  } catch (error) {
-    hide();
-    message.error('配置失败请重试！');
-    return false;
-  }
-}; */
-
-function showRemoveConfirm({ title, content, handleOnOk, okText, cancelText }) {
-  confirm({
-    title,
-    content,
-    okText,
-    cancelText,
-    onOk() {
-      handleOnOk();
-    },
-  });
-}
-
 const TableList: React.FC = () => {
   const intl = useIntl();
   const actionRef = useRef<ActionType>();
   const [currentRow, setCurrentRow] = useState<API.Instructor>();
-  const [showDetail, setShowDetail] = useState<boolean>(false);
-  const [addUpdateFormVisible, setAddUpdateFormVisible] = useState<boolean>(false);
+  const [detailsVisible, setDetailsVisible] = useState<boolean>(false);
+  const [addUpdateVisible, setAddUpdateVisible] = useState<boolean>(false);
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
 
   const handleGetOne = async (id: number) => {
     const hide = message.loading(
       intl.formatMessage({
-        id: 'app.processing.loading',
+        id: MessageId.Loading,
       }),
     );
     try {
@@ -74,10 +34,50 @@ const TableList: React.FC = () => {
       hide();
       message.error(
         intl.formatMessage({
-          id: 'app.processing.error',
+          id: MessageId.Error,
         }),
       );
     }
+  };
+
+  const handleRemoveOne = async (id: number) => {
+    try {
+      await removeOne(id);
+      message.success(
+        intl.formatMessage({
+          id: MessageId.Success,
+        }),
+      );
+      if (actionRef.current) {
+        actionRef.current.reload();
+      }
+    } catch (error) {
+      message.error(
+        intl.formatMessage({
+          id: MessageId.Error,
+        }),
+      );
+    }
+  };
+
+  const showRemoveConfirm = (id: number, content: string) => {
+    confirm({
+      title: intl.formatMessage({
+        id: 'app.item.removeMessage',
+      }),
+      icon: <ExclamationCircleOutlined />,
+      content,
+      okText: intl.formatMessage({
+        id: 'app.ok',
+      }),
+      okType: 'danger',
+      cancelText: intl.formatMessage({
+        id: 'app.cancel',
+      }),
+      onOk: async () => {
+        await handleRemoveOne(id);
+      },
+    });
   };
 
   const columns: ProColumns<API.Instructor>[] = [
@@ -98,7 +98,7 @@ const TableList: React.FC = () => {
           <a
             onClick={() => {
               setCurrentRow(entity);
-              setShowDetail(true);
+              setDetailsVisible(true);
             }}
           >
             {`${entity.nombres} ${entity.apellidos}`}
@@ -135,9 +135,9 @@ const TableList: React.FC = () => {
       render: (_, record) => [
         <a
           key="detail"
-          onClick={() => {
-            setCurrentRow(record);
-            setShowDetail(true);
+          onClick={async () => {
+            await handleGetOne(record.personaId);
+            setDetailsVisible(true);
           }}
         >
           <FormattedMessage id="app.item.detail" />
@@ -147,7 +147,7 @@ const TableList: React.FC = () => {
           onClick={async () => {
             await handleGetOne(record.personaId);
             setIsEditMode(true);
-            setAddUpdateFormVisible(true);
+            setAddUpdateVisible(true);
           }}
         >
           <FormattedMessage id="app.item.update" />
@@ -155,44 +155,7 @@ const TableList: React.FC = () => {
         <a
           key="remove"
           onClick={() => {
-            showRemoveConfirm({
-              title: intl.formatMessage({
-                id: 'app.item.removeMessage',
-              }),
-              content: `${record.nombres} ${record.apellidos}`,
-              okText: intl.formatMessage({
-                id: 'app.ok',
-              }),
-              cancelText: intl.formatMessage({
-                id: 'app.cancel',
-              }),
-              handleOnOk: async () => {
-                const hide = message.loading(
-                  intl.formatMessage({
-                    id: 'app.processing.loading',
-                  }),
-                );
-                try {
-                  await removeOne(record.personaId);
-                  hide();
-                  message.success(
-                    intl.formatMessage({
-                      id: 'app.processing.success',
-                    }),
-                  );
-                  if (actionRef.current) {
-                    actionRef.current.reload();
-                  }
-                } catch (error) {
-                  hide();
-                  message.error(
-                    intl.formatMessage({
-                      id: 'app.processing.error',
-                    }),
-                  );
-                }
-              },
-            });
+            showRemoveConfirm(record.personaId, `${record.nombres} ${record.apellidos}`);
           }}
         >
           <FormattedMessage id="app.item.remove" />
@@ -222,19 +185,23 @@ const TableList: React.FC = () => {
             key="primary"
             onClick={() => {
               setIsEditMode(false);
-              setAddUpdateFormVisible(true);
+              setAddUpdateVisible(true);
             }}
           >
             <PlusOutlined /> <FormattedMessage id="app.item.add" />
           </Button>,
         ]}
       />
-      {addUpdateFormVisible && (
+      {addUpdateVisible && (
         <AddUpdate
           onSubmit={async (success) => {
-            console.log('success', success);
             if (success) {
-              setAddUpdateFormVisible(false);
+              setAddUpdateVisible(false);
+              message.success(
+                intl.formatMessage({
+                  id: MessageId.Success,
+                }),
+              );
               setCurrentRow(undefined);
               if (actionRef.current) {
                 actionRef.current.reload();
@@ -242,20 +209,20 @@ const TableList: React.FC = () => {
             }
           }}
           onCancel={() => {
-            setAddUpdateFormVisible(false);
+            setAddUpdateVisible(false);
             setCurrentRow(undefined);
           }}
-          formVisible={addUpdateFormVisible}
+          visible={addUpdateVisible}
           isEditMode={isEditMode}
           item={currentRow || {}}
         />
       )}
-      {showDetail && currentRow?.personaId && (
+      {detailsVisible && (
         <Details
-          id={currentRow?.personaId}
-          visible={showDetail}
+          visible={detailsVisible}
+          item={currentRow || {}}
           onClose={() => {
-            setShowDetail(false);
+            setDetailsVisible(false);
           }}
         />
       )}
