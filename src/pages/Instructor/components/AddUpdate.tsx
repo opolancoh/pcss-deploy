@@ -37,10 +37,10 @@ const AddUpdate: React.FC<FormProps> = (props) => {
 
   const formTitleId = isEditMode ? 'app.item.updateItem' : 'app.item.addItem';
   const submitText = intl.formatMessage({
-    id: 'app.ok',
+    id: 'app.common.ok',
   });
   const resetText = intl.formatMessage({
-    id: 'app.cancel',
+    id: 'app.common.cancel',
   });
   const requiredMsg = intl.formatMessage({
     id: 'app.form.requiredMsg',

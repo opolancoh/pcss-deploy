@@ -72,5 +72,6 @@ export default {
   'pages.instructor.competencia': 'Competencia',
   'pages.instructor.resultadoDeAprendizaje': 'Resultado de aprendizaje',
   'pages.instructor.areaDeConocimiento': 'Núcleo de conocimiento',
-  
+  'pages.sede.table.title': 'Listado de sedes',
+  'pages.sede.administradorSede': 'Administrador',
 };

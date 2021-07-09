@@ -53,7 +53,7 @@ const Details: React.FC<Props> = (props) => {
     <Drawer width={640} placement="right" visible={props.visible} onClose={props.onClose}>
       <p style={{ ...pStyle, marginBottom: 24 }}>
         {intl.formatMessage({
-          id: 'app.details',
+          id: 'app.common.details',
         })}
       </p>
       <p style={pStyle}>{`${item.nombres} ${item.apellidos}`}</p>

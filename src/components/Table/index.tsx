@@ -6,13 +6,22 @@ import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
 
 import { thousandsSeparatorWithDots, MessageId } from '@/utils/utils';
-import { getAll, getOne, removeOne } from '@/services/api/instructor-api';
-import AddUpdate from './components/AddUpdate';
-import Details from './components/Details';
+// import { getAll, getOne, removeOne } from '@/services/api/instructor-api';
+// import AddUpdate from './components/AddUpdate';
+// import Details from './components/Details';
 
 const { confirm } = Modal;
 
-const TableList: React.FC = () => {
+type Props = {
+  title: string;
+  rowKey: string;
+  columns: ProColumns<any>;
+  getAll: () => Promise<ANT.ProTableDataSource>;
+  getOne: (id: number) => Promise<any>;
+  removeOne: (id: number) => Promise<any>;
+};
+
+const Table: React.FC<Props> = ({ title, rowKey, getAll, getOne, removeOne }) => {
   const intl = useIntl();
   const actionRef = useRef<ActionType>();
   const [currentRow, setCurrentRow] = useState<API.Instructor>();
@@ -167,10 +176,8 @@ const TableList: React.FC = () => {
   return (
     <ConfigProvider locale={intl}>
       <ProTable<API.Instructor, API.PageParams>
-        headerTitle={intl.formatMessage({
-          id: 'pages.instructor.table.title',
-        })}
-        rowKey="personaId"
+        headerTitle={title}
+        rowKey={rowKey}
         search={false}
         options={false}
         columns={columns}
@@ -192,7 +199,7 @@ const TableList: React.FC = () => {
           </Button>,
         ]}
       />
-      {addUpdateVisible && (
+      {/*       {addUpdateVisible && (
         <AddUpdate
           onSubmit={async (success) => {
             if (success) {
@@ -225,9 +232,9 @@ const TableList: React.FC = () => {
             setDetailsVisible(false);
           }}
         />
-      )}
+      )} */}
     </ConfigProvider>
   );
 };
 
-export default TableList;
+export default Table;

@@ -5,8 +5,8 @@ import { useIntl, FormattedMessage } from 'umi';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
 
-import { thousandsSeparatorWithDots, MessageId } from '@/utils/utils';
-import { getAll, getOne, removeOne } from '@/services/api/instructor-api';
+import { MessageId } from '@/utils/utils';
+import { getAll, getOne, removeOne } from './service';
 import AddUpdate from './components/AddUpdate';
 import Details from './components/Details';
 
@@ -15,7 +15,7 @@ const { confirm } = Modal;
 const TableList: React.FC = () => {
   const intl = useIntl();
   const actionRef = useRef<ActionType>();
-  const [currentRow, setCurrentRow] = useState<API.Instructor>();
+  const [currentRow, setCurrentRow] = useState<API.Sede>();
   const [detailsVisible, setDetailsVisible] = useState<boolean>(false);
   const [addUpdateVisible, setAddUpdateVisible] = useState<boolean>(false);
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
@@ -80,53 +80,34 @@ const TableList: React.FC = () => {
     });
   };
 
-  const columns: ProColumns<API.Instructor>[] = [
+  const handleDetailsClick = async (id: number) => {
+    await handleGetOne(id);
+    setDetailsVisible(true);
+  };
+
+  const columns: ProColumns<API.Sede>[] = [
     {
-      dataIndex: 'tipoIdentificacion',
-      title: <FormattedMessage id="app.person.idType" />,
-    },
-    {
-      dataIndex: 'numeroIdentificacion',
-      title: <FormattedMessage id="app.person.idNumber" />,
-      renderText: (val: string) => thousandsSeparatorWithDots(val),
-    },
-    {
-      dataIndex: 'nombrePersona',
-      title: <FormattedMessage id="app.person.name" />,
+      dataIndex: 'nombre',
+      title: <FormattedMessage id="app.common.name" />,
       render: (dom, entity) => {
         return (
           <a
-            onClick={() => {
-              setCurrentRow(entity);
-              setDetailsVisible(true);
+            onClick={async () => {
+              await handleDetailsClick(entity.sedeId);
             }}
           >
-            {`${entity.nombres} ${entity.apellidos}`}
+            {`${entity.nombre}`}
           </a>
         );
       },
     },
     {
-      dataIndex: 'tipoVinculacion',
-      title: <FormattedMessage id="pages.instructor.tipoVinculacion" />,
+      dataIndex: 'direccion',
+      title: <FormattedMessage id="app.common.address" />,
     },
     {
-      dataIndex: 'totalHorasMes',
-      title: <FormattedMessage id="pages.instructor.totalHorasMes" />,
-    },
-    {
-      dataIndex: 'fechaInicioContrato',
-      title: <FormattedMessage id="pages.instructor.fechaInicioContrato" />,
-      valueType: 'date',
-    },
-    {
-      dataIndex: 'fechaFinContrato',
-      title: <FormattedMessage id="pages.instructor.fechaFinContrato" />,
-      valueType: 'date',
-    },
-    {
-      dataIndex: 'areaDeConocimiento',
-      title: <FormattedMessage id="pages.instructor.areaDeConocimiento" />,
+      dataIndex: 'administradorSede',
+      title: <FormattedMessage id="pages.sede.administradorSede" />,
     },
     {
       dataIndex: 'option',
@@ -136,8 +117,7 @@ const TableList: React.FC = () => {
         <a
           key="detail"
           onClick={async () => {
-            await handleGetOne(record.personaId);
-            setDetailsVisible(true);
+            await handleDetailsClick(record.sedeId);
           }}
         >
           <FormattedMessage id="app.item.detail" />
@@ -145,7 +125,7 @@ const TableList: React.FC = () => {
         <a
           key="update"
           onClick={async () => {
-            await handleGetOne(record.personaId);
+            await handleGetOne(record.sedeId);
             setIsEditMode(true);
             setAddUpdateVisible(true);
           }}
@@ -155,7 +135,7 @@ const TableList: React.FC = () => {
         <a
           key="remove"
           onClick={() => {
-            showRemoveConfirm(record.personaId, `${record.nombres} ${record.apellidos}`);
+            showRemoveConfirm(record.sedeId, `${record.nombre}`);
           }}
         >
           <FormattedMessage id="app.item.remove" />
@@ -166,11 +146,11 @@ const TableList: React.FC = () => {
 
   return (
     <ConfigProvider locale={intl}>
-      <ProTable<API.Instructor, API.PageParams>
+      <ProTable<API.Sede, API.PageParams>
         headerTitle={intl.formatMessage({
-          id: 'pages.instructor.table.title',
+          id: 'pages.sede.table.title',
         })}
-        rowKey="personaId"
+        rowKey="sedeId"
         search={false}
         options={false}
         columns={columns}

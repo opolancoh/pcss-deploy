@@ -1,7 +1,9 @@
 export default {
-  'app.ok': 'Aceptar',
-  'app.cancel': 'Cancelar',
-  'app.details': 'Detalles',
+  'app.common.ok': 'Aceptar',
+  'app.common.cancel': 'Cancelar',
+  'app.common.details': 'Detalles',
+  'app.common.name': 'Nombre',
+  'app.common.address': 'Dirección',
   'app.processing.loading': 'procesando',
   'app.processing.success': 'proceso exitoso',
   'app.processing.error': 'proceso no exitoso',

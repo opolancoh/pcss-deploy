@@ -99,6 +99,14 @@ declare namespace API {
     type?: NoticeIconItemType;
   };
 
+  export type GetAllResponse = {
+    data: any[];
+    paging: {
+      total: number;
+    };
+  };
+
+  /** Instructor **/
   export type Instructor = {
     personaId: number;
     tipoIdentificacionId: number;
@@ -119,29 +127,39 @@ declare namespace API {
 
   export type InstructorList = {
     data: Instructor[];
-    /** 列表的内容总数 */
     total?: number;
     success?: boolean;
   };
 
-  export type GetAllResponse = {
-    data: any[];
-    paging: {
-      total: number;
-    };
-  };
-
+  /** Tipo Identificacion **/
   export type TipoIdentificacion = {
     tipoIdentificacionId: number;
     descripcion: string;
   };
-
   export type TipoIdentificacionList = TipoIdentificacion[];
 
+  /** Tipo Vinculacion **/
   export type TipoVinculacion = {
     tipoVinculacionId: number;
     descripcion: string;
   };
-
   export type TipoVinculacionList = TipoVinculacion[];
+
+  /*** Tipo Vinculacion ***/
+  export type TipoVinculacion = {
+    tipoVinculacionId: number;
+    descripcion: string;
+  };
+  export type TipoVinculacionList = TipoVinculacion[];
+
+  /*** Sede ***/
+  export type Sede = {
+    sedeId: number;
+    nombre: string;
+    direccion: string;
+    administradorSede: string;
+  };
+  export type SedeList = Sede[];
+
+
 }

@@ -43,10 +43,16 @@
     component: '../layouts/BasicLayout',
     routes: [
       {
-        name: 'instructor',
-        path: '/master-data/instructors',
+        name: 'Instructor',
+        path: '/master-data/instructor',
         icon: 'table',
         component: './Instructor',
+      },
+      {
+        name: 'Sede',
+        path: '/master-data/sede',
+        icon: 'table',
+        component: './Sede',
       },
     ],
   },
